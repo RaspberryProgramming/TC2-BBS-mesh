@@ -37,6 +37,8 @@ js8call_formatter = logging.Formatter('%(asctime)s - JS8Call - %(levelname)s - %
 js8call_handler.setFormatter(js8call_formatter)
 js8call_logger.addHandler(js8call_handler)
 
+continue_running = True
+
 def display_banner():
     banner = """
 ████████╗ ██████╗██████╗       ██████╗ ██████╗ ███████╗
@@ -70,7 +72,13 @@ def main():
     def receive_packet(packet, interface):
         on_receive(packet, interface)
 
+    def on_connection_loss(interface):
+        logging.error("Connection to Meshtastic device lost.")
+        global continue_running
+        continue_running = False
+
     pub.subscribe(receive_packet, system_config['mqtt_topic'])
+    pub.subscribe(on_connection_loss, 'meshtastic.connection.lost')
 
     # Initialize and start JS8Call Client if configured
     js8call_client = JS8CallClient(interface)
@@ -80,7 +88,7 @@ def main():
         js8call_client.connect()
 
     try:
-        while True:
+        while continue_running:
             time.sleep(1)
 
     except KeyboardInterrupt:
