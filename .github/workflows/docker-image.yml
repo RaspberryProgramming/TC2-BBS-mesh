@@ -4,9 +4,6 @@ on:
   push:
     branches: [ "main" ]
 
-env:
-  VERSION: $(date +%s)
-
 jobs:
 
   build:
@@ -15,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set environment variable
+      run: echo "VERSION=$(date +%s)" >> $GITHUB_ENV
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ghcr.io/raspberryprogramming/tc2-bbs-mesh:$VERSION
     - name: Add latest tag to docker image
