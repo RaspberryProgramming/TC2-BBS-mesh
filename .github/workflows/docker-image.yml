@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  VERSION: $(date +%s)
+
 jobs:
 
   build:
@@ -12,8 +15,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set Version
-      run: export VERSION=$(date +%s)
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ghcr.io/raspberryprogramming/tc2-bbs-mesh:$VERSION
     - name: Add latest tag to docker image
