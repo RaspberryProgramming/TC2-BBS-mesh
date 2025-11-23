@@ -11,7 +11,7 @@ RUN git clone https://github.com/TheCommsChannel/TC2-BBS-mesh.git
 
 ####
 
-FROM --platform=$BUILDPLATFORM python:alpine
+FROM --platform=$BUILDPLATFORM python:3.13.9-alpine
 
 # Switch to non-root user
 RUN adduser --disabled-password mesh
